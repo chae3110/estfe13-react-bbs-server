@@ -2,14 +2,14 @@ const express = require("express");
 const cors = require("cors");
 const app = express();
 const mysql = require("mysql2");
-const port = 3000;
+const port = process.env.PORT || 3000;
 const multer = require("multer");
 const fs = require("fs");
 const path = require("path");
 
 app.use(express.json()); //json->object
 app.use(express.urlencoded({ extended: true })); //html form ->object
-app.use("/uploads", express.static("uploads"));
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 //   /uploads 주소로 접속시 upload 폴더에 접근 권한 부여
 
 let corsOptions = {
@@ -20,7 +20,7 @@ app.use(cors(corsOptions));
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "uploads/");
+    cb(null, path.join(__dirname, "uploads"));
   },
   filename: function (req, file, cb) {
     const orinalExt = file.originalname.split(".")[1];
